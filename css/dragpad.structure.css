@@ -1,0 +1,26 @@
+div.dp-wrapper {
+  position: relative;  
+  display: inline-block;
+}
+div.dp-pad {
+  position: relative;
+  display: block;
+  overflow: visible;
+}
+div.dp-handle {
+  position: absolute;
+  display: inline-block;
+  overflow: hidden;
+  z-index: 1;
+  top: 1px;
+  left: 1px;
+}
+div.dp-pad-html-div {
+  display: block;
+  z-index: 0;  
+  background-color: transparent;
+}
+div.dp-handle-html-div {
+  display: block;  
+  background-color: transparent;
+}
