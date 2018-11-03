@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>dragpad - slider</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../css/dragpad.structure.css" rel="stylesheet">
+    <link href="../css/dragpad.theme.css" rel="stylesheet">
+    <style>
+      #rect {
+        background-color: #C0D5EA;
+        border: dashed 2px #2196F3;
+        display: inline-block;
+        left: 0;
+        top: 0;
+      }
+
+      .pad-custom {
+        border-radius: 10px !important;
+        position: relative;
+        left: 10px;
+        right: 10px;
+      }
+      .pad-custom .progress {
+        background-color: greenyellow;
+        height: 20px;
+        border-radius: 10px;
+        opacity: 0.5;
+      }
+      .pad-custom.red .progress {
+        background-color: red !important;
+      }
+      .handle-custom {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-weight: bold;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        text-shadow: 1px 1px 1px black;
+        cursor: e-resize;
+        font-size: 2em;
+      }
+      .wrapper-custom {
+        display: block !important;
+      }
+    </style>
+  </head>
+  <body style="margin: 10px; font-size: 16px;">
+    <h2>Simple pad</h2>
+    <div id="pad"></div>
+
+    <h2>Simple slider</h2>
+    <div id="slider"></div>
+
+    <h2>Snapping slider</h2>
+    <div id="slider2"></div>
+    <input id="stepsTxt" type="text" value="" readonly>
+
+    <h2>Progress slider</h2>
+    <div id="slider3"></div>
+
+    <h2>Snapping pad</h2>
+    <div id="pad2"></div>
+
+    <h2>Pad HTML</h2>
+    <div id="pad3"></div>
+
+    <script src="../js/dragpad.js"></script>
+    <script>
+      window.addEventListener('load', function() {
+
+        dragpad('pad', {
+          padWidth: '200px',
+          padHeight: '140px'
+        });
+
+        dragpad('slider', {
+          padWidth: '20vw',
+          padHeight: '1rem',
+          handleWidth: '1.5rem',
+          handleHeight: '1.5rem',
+          startX: '0%',
+          startY: '50%',
+          padCapture: true,
+          onBeforeMove : function (event) {
+            //makes the handle vertically aligned
+            event.y = event.maxY / 2;
+          },
+        });
+
+        var steps = 5;
+        var stepsTxt = document.getElementById('stepsTxt');
+        dragpad('slider2', {
+          padWidth: '20vw',
+          padHeight: '1rem',
+          handleWidth: '1.5rem',
+          handleHeight: '1.5rem',
+          startX: '50%',
+          startY: '50%',
+          padCapture: true,
+          onBeforeMove : function (event) {
+            //makes the handle vertically aligned
+            event.y = event.maxY / 2;
+            //forces the handle to snap to certain positions
+            event.x = Math.floor(event.x / (event.maxX / steps)) * (event.maxX / (steps - 1));
+          },
+          onAfterMove  : function (event) {
+            var curStep = Math.floor(event.x / (event.maxX / (steps - 1))).toString();
+            if (stepsTxt.value !== curStep) {
+              stepsTxt.value = curStep;
+            }
+          },
+        });
+
+        var slider3 = new dragpad("slider3", {
+          padWidth    : "80%",
+          padHeight   : "20px",
+          padCapture  : true,
+          padHTML     : '<div id="progress" class="progress"></div>',
+          handleHTML  : '&gt;',
+          handleWidth : "30px",
+          handleHeight: "30px",
+          startX      : "20%",
+          startY      : "50%",
+          wrapperClass: "wrapper-custom",
+          padClass    : "pad-custom",
+          handleClass : "handle-custom",
+          onBeforeMove: function(event) {
+            event.y = 9;
+          },
+          onAfterMove : function (event) {
+            document.getElementById("progress").style.width = event.x + "px";
+            if (slider3) {
+              if (event.x > (event.maxX / 2)) {
+                slider3.padAddClass('red');
+              } else {
+                slider3.padRemoveClass('red');
+              }
+            }
+          }
+        });
+
+        dragpad("pad2", {
+          padWidth    : "200px",
+          padHeight   : "200px",
+          handleWidth : "30px",
+          handleHeight: "30px",
+          startX      : 0,
+          startY      : 0,
+          vertMargins : "1px",
+          horzMargins : "1px",
+          onBeforeMove: function (event) {
+            if (event.x <= 30) { event.x = 0; }
+            if (event.y <= 30) { event.y = 0; }
+            if (event.x >= event.maxX - 30) { event.x = event.maxX; }
+            if (event.y >= event.maxY - 30) { event.y = event.maxY; }
+            if (
+              event.x >= (event.maxX / 2 - 20) && event.x <= (event.maxX / 2 + 20) &&
+              event.y >= (event.maxY / 2 - 20) && event.y <= (event.maxY / 2 + 20)
+            ) {
+              event.x = event.maxX / 2;
+              event.y = event.maxY / 2;
+            }
+          },
+        });
+
+        dragpad("pad3", {
+          padWidth    : "200px",
+          padHeight   : "200px",
+          padCapture  : true,
+          padHTML     : '<div id="rect"></div>',
+          handleWidth : "20px",
+          handleHeight: "20px",
+          startX      : "50%",
+          startY      : "50%",
+          vertMargins : "1px",
+          horzMargins : "1px",
+          onBeforeMove: function (event) {
+            event.x = event.x < 40 ? 40 : event.x;
+            event.y = event.y < 40 ? 40 : event.y;
+          },
+          onAfterMove : function (event) {
+            var rect = document.getElementById("rect");
+            rect.style.width = event.x + "px";
+            rect.style.height = event.y + "px";
+          },
+          onStartMove : function (event) {
+            console.log("START");
+          },
+          onEndMove   : function (event) {
+            console.log("END");
+          }
+        });
+
+      });
+    </script>
+  </body>
