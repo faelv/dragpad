@@ -12,7 +12,7 @@ an options object as second parameter.
 ```javascript
 dragpad('parent', {...});
 //if you want a reference
-var dp = new (parentElm, {...});
+var dp = new dragpad(parentElm, {...});
 ```
 3. That's it. There's a _sample.html_ file include.
 
