@@ -7,7 +7,7 @@ Small, no dependencies HTML/JS component that can be used as a flipswitch, slide
 **css/dragpad.theme.css** _(you can customize or replace the theme file)_<br>
 **js/dragpad.js**<br>
 
-2. Call the function `dragpad` passing the parent element as the firt parameter (ID as string or the element itself) and
+2. Call the function `dragpad` passing the parent element as the first parameter (ID as string or the element itself) and
 an options object as second parameter.
 ```javascript
 dragpad('parent', {...});
