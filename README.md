@@ -1,6 +1,9 @@
 # dragpad
 Small, no dependencies HTML/JS component that can be used as a flipswitch, slider, bidimensional slider, progress bar, etc
 
+## See it
+https://faelv.github.io/dragpad/
+
 ## How To Use
 1. Include the following files:<br>
 **css/dragpad.structure.css**<br>
